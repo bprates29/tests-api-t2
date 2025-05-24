@@ -1,6 +1,8 @@
 package org.example;
 
+import com.google.gson.Gson;
 import org.example.client.SimpleHttpClient;
+import org.example.dtos.AgePrediction;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,11 +12,15 @@ import java.net.*;
 public class Main {
     public static void main(String[] args) {
         try {
-            String texto = SimpleHttpClient.get("https://jsonplaceholder.typicode.com/posts/1");
-            System.out.println("TEXTO: " + texto);
+            String ageJson = SimpleHttpClient.get("https://api.agify.io/?name=bernardo");
+            System.out.println("idade estimada: " + ageJson);
 
-            String age = SimpleHttpClient.get("https://api.agify.io/?name=bernardo");
-            System.out.println("idade estimada: " + age);
+            Gson gson = new Gson();
+            AgePrediction agePrediction = gson.fromJson(ageJson, AgePrediction.class);
+
+            System.out.println("Nome: " + agePrediction.name());
+            System.out.println("Idade estimada: " + agePrediction.age());
+            System.out.println("Contador: " + agePrediction.count());
 
         } catch (URISyntaxException | IOException e) {
             throw new RuntimeException(e);
